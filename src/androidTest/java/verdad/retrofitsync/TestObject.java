@@ -10,21 +10,5 @@ import com.activeandroid.annotation.Table;
  */
 @Table(name = "TestObject")
 public class TestObject extends SyncModel {
-
     @Expose @Column(name = "first_name") public String firstName;
-
-    @Override
-    public void createOnServer() {
-        new MockServer().create();
-    }
-
-    @Override
-    public void deleteOnServer() {
-        new MockServer().delete();
-    }
-
-    @Override
-    public void updateOnServer() {
-        new MockServer().update();
-    }
 }

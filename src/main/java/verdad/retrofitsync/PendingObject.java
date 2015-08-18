@@ -10,10 +10,12 @@ import com.activeandroid.annotation.Table;
 @Table(name = "RetrofitSyncPendingObject")
 public class PendingObject extends Model {
     public static final String RETROFIT_SYNC_CREATE = "create";
+    public static final String RETROFIT_SYNC_READ = "read";
     public static final String RETROFIT_SYNC_UPDATE = "update";
     public static final String RETROFIT_SYNC_DELETE = "delete";
 
     @Column(name = "class") public String className;
-    @Column(name = "call") public String call;
+    @Column(name = "retrofitServiceName") public String serviceName;
+    @Column(name = "retrofitServiceMethod") public String verb;
     @Column(name = "json") public String json;
 }

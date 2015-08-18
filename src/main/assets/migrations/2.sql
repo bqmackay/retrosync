@@ -1,0 +1,1 @@
+ALTER TABLE RetrofitSyncPendingObject DROP COLUMN call;
