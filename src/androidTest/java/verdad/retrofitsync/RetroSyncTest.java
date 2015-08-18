@@ -13,13 +13,13 @@ public class RetroSyncTest extends TestCase {
 
     TestObject object;
     RetroSync sync;
-    MockInteractor server;
+    MockInteractor interactor;
 
     public void setUp() throws Exception {
         super.setUp();
         object = new TestObject();
         object.firstName = "TestName";
-        server = new MockInteractor();
+        interactor = new MockInteractor();
     }
 
     public void tearDown() throws Exception {
@@ -32,14 +32,14 @@ public class RetroSyncTest extends TestCase {
 
     public void testSavePendingObject() throws Exception {
         sync = new RetroSync(new MockBadReachability());
-        sync.save(object, server, PendingObject.RETROFIT_SYNC_CREATE);
+        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
         List<PendingObject> pendingObjects = new Select().from(PendingObject.class).execute();
         assertEquals(1, pendingObjects.size());
     }
 
     public void testSaveWithBadReachability() throws Exception {
         sync = new RetroSync(new MockBadReachability());
-        sync.save(object, server, PendingObject.RETROFIT_SYNC_CREATE);
+        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
         assertEquals(true, object.isSyncDirty);
         List<PendingObject> pendingObjects = new Select().from(PendingObject.class).execute();
         assertEquals(1, pendingObjects.size());
@@ -47,7 +47,7 @@ public class RetroSyncTest extends TestCase {
 
     public void testSaveWithGoodReachability() throws Exception {
         sync = new RetroSync(new MockGoodReachability());
-        sync.save(object, server, PendingObject.RETROFIT_SYNC_CREATE);
+        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
         assertEquals(false, object.isSyncDirty);
         List<PendingObject> pendingObjects =  new Select().from(PendingObject.class).execute();
         assertEquals(0, pendingObjects.size());
@@ -55,7 +55,7 @@ public class RetroSyncTest extends TestCase {
 
     public void testSavePendingChanges() throws Exception {
         sync = new RetroSync(new MockBadReachability());
-        sync.save(object, server, PendingObject.RETROFIT_SYNC_CREATE);
+        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
         RetroSync.savePendingChanges(new MockGoodReachability());
         List<PendingObject> pendingObjects =  new Select().from(PendingObject.class).execute();
         assertEquals(0, pendingObjects.size());
@@ -63,7 +63,7 @@ public class RetroSyncTest extends TestCase {
 
     public void testKeepPendingChangesIfReachabilityIsBad() throws Exception {
         sync = new RetroSync(new MockBadReachability());
-        sync.save(object, server, PendingObject.RETROFIT_SYNC_CREATE);
+        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
         RetroSync.savePendingChanges(new MockBadReachability());
         List<PendingObject> pendingObjects =  new Select().from(PendingObject.class).execute();
         assertEquals(1, pendingObjects.size());

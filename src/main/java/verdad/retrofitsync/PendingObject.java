@@ -16,6 +16,6 @@ public class PendingObject extends Model {
 
     @Column(name = "class") public String className;
     @Column(name = "retrofitServiceName") public String serviceName;
-    @Column(name = "retrofitServiceMethod") public String verb;
+    @Column(name = "retrofitServiceMethod") public String serviceMethod;
     @Column(name = "json") public String json;
 }

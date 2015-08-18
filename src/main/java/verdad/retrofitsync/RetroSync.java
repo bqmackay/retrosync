@@ -21,16 +21,15 @@ public class RetroSync {
     }
 
     public void save(SyncModel model, SyncInteractorInterface service, String verb) {
-        if (!saveToServer(model, service, verb)) {
-            // - create pending object
-            PendingObject pendingObject = new PendingObject();
-            pendingObject.serviceName = service.getClass().getName();
-            pendingObject.verb = verb;
-            pendingObject.className = model.getClass().getName();
-            pendingObject.json = getActiveAndroidGson().toJson(model);
-            // - save to database
-            pendingObject.save();
-        }
+        // - create pending object
+        PendingObject pendingObject = new PendingObject();
+        pendingObject.serviceName = service.getClass().getName();
+        pendingObject.serviceMethod = verb;
+        pendingObject.className = model.getClass().getName();
+        pendingObject.json = getActiveAndroidGson().toJson(model);
+        pendingObject.save();
+        // - save to database
+        saveToServer(model, service, pendingObject, verb);
     }
 
     public static void savePendingChanges(Reachability reachability) throws ClassNotFoundException {
@@ -46,16 +45,16 @@ public class RetroSync {
                 Class<?> serviceClass = Class.forName(object.serviceName);
                 SyncInteractorInterface service = (SyncInteractorInterface) new Gson().fromJson(object.json, serviceClass);
                 // - call function specified in app
-                callService(model, service, object.verb, new RetroSyncPendingCallback(object, service));
+                callService(model, service, object.serviceMethod, new RetroSyncCallback(model, object, service));
             }
         }
     }
 
-    private boolean saveToServer(SyncModel model, SyncInteractorInterface service, String verb) {
+    private boolean saveToServer(SyncModel model, SyncInteractorInterface service, PendingObject pendingObject, String verb) {
         model.isSyncDirty = true;
         model.save();
         if (reachability.isOnline()) {
-            callService(model, service, verb, new RetroSyncCallback(model, service));
+            callService(model, service, verb, new RetroSyncCallback(model, pendingObject, service));
             return true;
         }
         return false;

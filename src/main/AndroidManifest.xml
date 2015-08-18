@@ -7,5 +7,11 @@
         <meta-data android:name="AA_DB_NAME" android:value="Pending.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="6" />
         <meta-data android:name="AA_SQL_PARSER" android:value="delimited" />
+
+        <receiver android:name=".ReachabilityBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

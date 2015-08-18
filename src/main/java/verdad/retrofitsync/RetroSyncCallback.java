@@ -10,10 +10,12 @@ import retrofit.client.Response;
 public class RetroSyncCallback implements Callback<SyncModel> {
 
     SyncModel model;
+    private PendingObject pendingObject;
     Callback<SyncModel> serverCallback;
 
-    public RetroSyncCallback(SyncModel model, Callback<SyncModel> serverCallback) {
+    public RetroSyncCallback(SyncModel model, PendingObject pendingObject, Callback<SyncModel> serverCallback) {
         this.model = model;
+        this.pendingObject = pendingObject;
         this.serverCallback = serverCallback;
     }
 
@@ -21,11 +23,13 @@ public class RetroSyncCallback implements Callback<SyncModel> {
     public void success(SyncModel syncModel, Response response) {
         model.isSyncDirty = false;
         model.save();
+        pendingObject.delete();
         serverCallback.success(syncModel, response);
     }
 
     @Override
     public void failure(RetrofitError error) {
+        pendingObject.save();
         serverCallback.failure(error);
     }
 }
