@@ -19,17 +19,22 @@ public class RetroSyncCallback implements Callback<SyncModel> {
         this.serverCallback = serverCallback;
     }
 
+    public RetroSyncCallback(SyncModel model, PendingObject pendingObject) {
+        this.model = model;
+        this.pendingObject = pendingObject;
+    }
+
     @Override
     public void success(SyncModel syncModel, Response response) {
         model.isSyncDirty = false;
         model.save();
         pendingObject.delete();
-        serverCallback.success(syncModel, response);
+        if (serverCallback != null) serverCallback.success(syncModel, response);
     }
 
     @Override
     public void failure(RetrofitError error) {
         pendingObject.save();
-        serverCallback.failure(error);
+        if (serverCallback != null) serverCallback.failure(error);
     }
 }

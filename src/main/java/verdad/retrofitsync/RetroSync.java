@@ -5,9 +5,11 @@ import com.google.gson.GsonBuilder;
 
 import com.activeandroid.query.Select;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.RetrofitError;
 
 /**
  * Created by bqmackay on 8/12/15.
@@ -20,6 +22,18 @@ public class RetroSync {
         this.reachability = reachability;
     }
 
+    /**
+     * Save will do three things:
+     * (1) save a pending network call to the database
+     * (2) check for network connectivity
+     * (3) if connectivity is good, send the REST call and delete the pending network call upon a successful call
+     *
+     * If the network connectivity is bad, the service's failure method is called with a network error message attached.
+     *
+     * @param model - object you want to save
+     * @param service - the class that makes the REST call
+     * @param verb - create, update, or delete
+     */
     public void save(SyncModel model, SyncInteractorInterface service, String verb) {
         // - create pending object
         PendingObject pendingObject = new PendingObject();
@@ -29,7 +43,9 @@ public class RetroSync {
         pendingObject.json = getActiveAndroidGson().toJson(model);
         pendingObject.save();
         // - save to database
-        saveToServer(model, service, pendingObject, verb);
+        if (!saveToServer(model, service, pendingObject, verb)) {
+            service.failure(RetrofitError.networkError("", new IOException("No network connectivity")));
+        }
     }
 
     public static void savePendingChanges(Reachability reachability) throws ClassNotFoundException {
@@ -45,7 +61,7 @@ public class RetroSync {
                 Class<?> serviceClass = Class.forName(object.serviceName);
                 SyncInteractorInterface service = (SyncInteractorInterface) new Gson().fromJson(object.json, serviceClass);
                 // - call function specified in app
-                callService(model, service, object.serviceMethod, new RetroSyncCallback(model, object, service));
+                callService(model, service, object.serviceMethod, new RetroSyncCallback(model, object));
             }
         }
     }

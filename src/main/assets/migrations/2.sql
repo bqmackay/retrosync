@@ -1,1 +1,1 @@
-ALTER TABLE RetrofitSyncPendingObject DROP COLUMN call;
+--ALTER TABLE RetrofitSyncPendingObject DROP COLUMN call;
