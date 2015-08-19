@@ -1,4 +1,4 @@
-package verdad.retrofitsync;
+package verdad.retrosync;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

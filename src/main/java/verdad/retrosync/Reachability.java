@@ -1,4 +1,4 @@
-package verdad.retrofitsync;
+package verdad.retrosync;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

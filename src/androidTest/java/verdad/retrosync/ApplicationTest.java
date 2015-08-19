@@ -1,4 +1,4 @@
-package verdad.retrofitsync;
+package verdad.retrosync;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
