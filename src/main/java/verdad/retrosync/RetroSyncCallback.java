@@ -26,8 +26,6 @@ public class RetroSyncCallback implements Callback<SyncModel> {
 
     @Override
     public void success(SyncModel syncModel, Response response) {
-        model.isSyncDirty = false;
-        model.save();
         pendingObject.delete();
         if (serverCallback != null) serverCallback.success(syncModel, response);
     }

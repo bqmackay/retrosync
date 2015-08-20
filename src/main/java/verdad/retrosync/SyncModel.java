@@ -10,7 +10,6 @@ import com.activeandroid.annotation.Column;
  */
 public abstract class SyncModel extends Model {
     @Expose @Column (name = "serverId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE) public long id;
-    @Expose @Column (name = "isSyncDirty") public boolean isSyncDirty;
 
     @Override
     public boolean equals(Object o) {

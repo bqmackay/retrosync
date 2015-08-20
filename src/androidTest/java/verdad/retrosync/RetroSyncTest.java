@@ -40,7 +40,6 @@ public class RetroSyncTest extends TestCase {
     public void testSaveWithBadReachability() throws Exception {
         sync = new RetroSync(new MockBadReachability());
         sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
-        assertEquals(true, object.isSyncDirty);
         List<PendingObject> pendingObjects = new Select().from(PendingObject.class).execute();
         assertEquals(1, pendingObjects.size());
     }
@@ -48,7 +47,6 @@ public class RetroSyncTest extends TestCase {
     public void testSaveWithGoodReachability() throws Exception {
         sync = new RetroSync(new MockGoodReachability());
         sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
-        assertEquals(false, object.isSyncDirty);
         List<PendingObject> pendingObjects =  new Select().from(PendingObject.class).execute();
         assertEquals(0, pendingObjects.size());
     }

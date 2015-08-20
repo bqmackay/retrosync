@@ -43,6 +43,7 @@ public class RetroSync {
         pendingObject.json = getActiveAndroidGson().toJson(model);
         pendingObject.save();
         // - save to database
+        model.save();
         if (!saveToServer(model, service, pendingObject, verb)) {
             service.failure(RetrofitError.networkError("", new IOException("No network connectivity")));
         }
@@ -67,8 +68,6 @@ public class RetroSync {
     }
 
     private boolean saveToServer(SyncModel model, SyncInteractorInterface service, PendingObject pendingObject, String verb) {
-        model.isSyncDirty = true;
-        model.save();
         if (reachability.isOnline()) {
             callService(model, service, verb, new RetroSyncCallback(model, pendingObject, service));
             return true;
