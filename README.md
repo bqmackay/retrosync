@@ -20,9 +20,46 @@ public class Contact extends SyncModel {
 SyncModel stores the model's id from the server locally and makes it unique. That way, if you pull down that data again and the object has changed on the server, it will overwrite the item on your local database instead of adding a new item. Expose is needed to make sure certain fields that RetroFit seems to add are not included. Otherwise, you would build an adapter for every item.
 
 ###RetroSync Callback
-RetroSync will store your data calls locally if your internet connection goes down. When the internet connection is reestablished, your data calls will be immediately sent back up to the server. Currently, create, update, and delete functions are allowed.
+RetroSync requires a special callback called SyncInteractorInterface. You will need to implement the create, update, and delete methods and make the respective API calls there, passing the provided retroSyncCallback as the callback to the RetroFit API.
 
-To implement this, implement the SyncInteractorInterface in the class that is the callback for the network calls. You will need to implement the create, update, and delete methods and make the respective API calls there, passing the provided retroSyncCallback as the callback to the RetroFit API.
+```java
+public class ContactInteractor implements SyncInteractorInterface<Contact> {
+
+    private final String TAG = "ContactInteractor";
+
+    ContactServiceInterface service;
+
+    public MyInteractor() {
+        provider = new NetworkProvider();
+        service = (ContactServiceInterface) provider.create(ContactServiceInterface.class);
+    }
+
+    @Override
+    public void create(Contact contact, Callback retroSyncCallback) {
+        service.createContact(contact.getFirstName(), contact.getLastName(), retroSyncCallback);
+    }
+
+    @Override
+    public void update(Contact contact, Callback retroSyncCallback) {
+        service.updateContact(contact.getFirstName(), contact.getLastName(), retroSyncCallback);
+    }
+
+    @Override
+    public void delete(Contact model, Callback retroSyncCallback) {
+        service.deleteContact(contact.getFirstName(), contact.getLastName(), retroSyncCallback);
+    }
+    
+    @Override
+    public void success(Contact contact, Response response) {
+        Log.i(TAG, "Success!");
+    }
+
+    @Override
+    public void failure(RetrofitError error) {
+        Log.i(TAG, "Failed: " + error);
+    }
+}
+```
 
 ###Syncing
 With your model and interactor ready to go, you can now make your data calls without worrying about network connections. When you are ready to make a network call, create an instance RetroSync, passing it a context.
