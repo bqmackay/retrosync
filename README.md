@@ -1,7 +1,7 @@
 # RetroSync
 Maintained by friends at VerdadTech
 
-RetroSync synchronizes your online and local databases. This started with the need to save changes locally when network connectivity goes down, and then pushing those changes when network connectivity comes back. This library uses RetroFit and Active Android exclusively to get these things done. 
+RetroSync stores your cloud database locally and managers your pending API calls if a network connection wasn't immediately available. This started with the need to save changes locally when network connectivity goes down, and then pushing those changes when network connectivity comes back. This library uses RetroFit and Active Android exclusively to get these things done. 
 
 ###Setup
 You'll need to setup Active Android first in your app before using RetroSync. You can find those instructions on their [GitHub page](https://github.com/pardom/ActiveAndroid).
