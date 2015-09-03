@@ -17,7 +17,7 @@ public class Contact extends SyncModel {
 }
 ```
 
-SyncModel stores the model's id from the server locally and makes it unique. That way, if you pull down that data again and the object has changed on the server, it will overwrite the item on your local database instead of adding a new item. Expose is needed to make sure certain fields that RetroFit seems to add are not included. Otherwise, you would build an adapter for every item.
+SyncModel stores the model's id from the server locally and makes it unique. That way, if you pull down that data again and the object has changed on the server, it will overwrite the item on your local database instead of adding a new item. Expose is needed to make sure certain fields that Active Android's base model has are not included ([see SO post](http://stackoverflow.com/questions/29908128/gson-and-active-android-attempted-to-serialize-java-lang-class-forgot-to-regis/29908168#29908168)). Otherwise, you would build an adapter for every item.
 
 ###RetroSync Callback
 RetroSync requires a special callback called SyncInteractorInterface. You will need to implement the create, update, and delete methods and make the respective API calls there, passing the provided retroSyncCallback as the callback to the RetroFit API.
