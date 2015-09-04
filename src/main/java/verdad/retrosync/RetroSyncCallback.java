@@ -1,5 +1,7 @@
 package verdad.retrosync;
 
+import android.util.Log;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -26,6 +28,7 @@ public class RetroSyncCallback implements Callback<SyncModel> {
 
     @Override
     public void success(SyncModel syncModel, Response response) {
+        Log.i("RetroSync", "Deleting pending object");
         pendingObject.delete();
         if (serverCallback != null) serverCallback.success(syncModel, response);
     }
@@ -33,6 +36,7 @@ public class RetroSyncCallback implements Callback<SyncModel> {
     @Override
     public void failure(RetrofitError error) {
         pendingObject.save();
+        Log.i("RetroSync", "Failed calls");
         if (serverCallback != null) serverCallback.failure(error);
     }
 }

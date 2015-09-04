@@ -1,9 +1,14 @@
 package verdad.retrosync;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
 
 import com.activeandroid.query.Select;
+
+import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +22,10 @@ import retrofit.RetrofitError;
 public class RetroSync {
 
     private Reachability reachability;
+
+    public RetroSync(Context context) {
+        this.reachability = new Reachability(context);
+    }
 
     public RetroSync(Reachability reachability) {
         this.reachability = reachability;
@@ -35,12 +44,17 @@ public class RetroSync {
      * @param verb - create, update, or delete
      */
     public void save(SyncModel model, SyncInteractorInterface service, String verb) {
+        save(model, service, verb, null);
+    }
+
+    public void save(SyncModel model, SyncInteractorInterface service, String verb, TypeAdapterFactory factory) {
         // - create pending object
         PendingObject pendingObject = new PendingObject();
         pendingObject.serviceName = service.getClass().getName();
         pendingObject.serviceMethod = verb;
         pendingObject.className = model.getClass().getName();
         pendingObject.json = getActiveAndroidGson().toJson(model);
+        Log.i("RetroSync", "Saving initial pending object");
         pendingObject.save();
         // - save to database
         model.save();
@@ -65,6 +79,10 @@ public class RetroSync {
                 callService(model, service, object.serviceMethod, new RetroSyncCallback(model, object));
             }
         }
+    }
+
+    public static void savePendingChanges(Context context) throws ClassNotFoundException {
+        savePendingChanges(new Reachability(context));
     }
 
     private boolean saveToServer(SyncModel model, SyncInteractorInterface service, PendingObject pendingObject, String verb) {
@@ -92,6 +110,6 @@ public class RetroSync {
         }
     }
     private static Gson getActiveAndroidGson() {
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     }
 }

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 /**
  * Created by bqmackay on 8/18/15.
@@ -17,7 +18,8 @@ public class ReachabilityBroadcastReceiver extends BroadcastReceiver {
 
         if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
             try {
-                RetroSync.savePendingChanges(new Reachability(context));
+                Log.i("RetroSync", "Network connection has returned! Saving pending objects...");
+                RetroSync.savePendingChanges(context);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

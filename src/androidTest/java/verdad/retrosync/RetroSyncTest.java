@@ -6,6 +6,8 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+
 /**
  * Created by bqmackay on 8/12/15.
  */
@@ -28,13 +30,6 @@ public class RetroSyncTest extends TestCase {
         for (PendingObject obj : pendingObjects) {
             obj.delete();
         }
-    }
-
-    public void testSavePendingObject() throws Exception {
-        sync = new RetroSync(new MockBadReachability());
-        sync.save(object, interactor, PendingObject.RETROFIT_SYNC_CREATE);
-        List<PendingObject> pendingObjects = new Select().from(PendingObject.class).execute();
-        assertEquals(1, pendingObjects.size());
     }
 
     public void testSaveWithBadReachability() throws Exception {
