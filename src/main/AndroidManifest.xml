@@ -3,12 +3,12 @@
 
     <application android:allowBackup="true"
                  android:label="@string/app_name"
-                 android:name="com.activeandroid.app.Application"
-                 >
 
-        <meta-data android:name="AA_DB_NAME" android:value="Pending.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="6" />
-        <meta-data android:name="AA_SQL_PARSER" android:value="delimited" />
+                 >
+        <!--android:name="com.activeandroid.app.Application"-->
+        <!--<meta-data android:name="AA_DB_NAME" android:value="Pending.db" />-->
+        <meta-data android:name="AA_DB_VERSION" android:value="10" />
+        <!--<meta-data android:name="AA_SQL_PARSER" android:value="delimited" />-->
         <receiver android:name="verdad.retrosync.ReachabilityBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

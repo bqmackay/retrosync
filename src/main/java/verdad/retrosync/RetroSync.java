@@ -3,7 +3,6 @@ package verdad.retrosync;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
 
 import com.activeandroid.query.Select;
 
@@ -44,10 +43,6 @@ public class RetroSync {
      * @param verb - create, update, or delete
      */
     public void save(SyncModel model, SyncInteractorInterface service, String verb) {
-        save(model, service, verb, null);
-    }
-
-    public void save(SyncModel model, SyncInteractorInterface service, String verb, TypeAdapterFactory factory) {
         // - create pending object
         PendingObject pendingObject = new PendingObject();
         pendingObject.serviceName = service.getClass().getName();
