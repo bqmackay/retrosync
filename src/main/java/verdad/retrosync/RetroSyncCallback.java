@@ -28,14 +28,12 @@ public class RetroSyncCallback implements Callback<SyncModel> {
 
     @Override
     public void success(SyncModel syncModel, Response response) {
-        Log.i("RetroSync", "Deleting pending object");
-        pendingObject.delete();
+        if (pendingObject.getId() != null) pendingObject.delete();
         if (serverCallback != null) serverCallback.success(syncModel, response);
     }
 
     @Override
     public void failure(RetrofitError error) {
-        pendingObject.save();
         Log.i("RetroSync", "Failed calls");
         if (serverCallback != null) serverCallback.failure(error);
     }

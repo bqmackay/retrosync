@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import com.activeandroid.query.Select;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +30,8 @@ public class RetroSync {
     }
 
     /**
-     * Save will do three things:
-     * (1) save a pending network call to the database
+     * Save will do the following:
+     * (1) save a pending network call to the databaseN
      * (2) check for network connectivity
      * (3) if connectivity is good, send the REST call and delete the pending network call upon a successful call
      *
@@ -49,11 +48,12 @@ public class RetroSync {
         pendingObject.serviceMethod = verb;
         pendingObject.className = model.getClass().getName();
         pendingObject.json = getActiveAndroidGson().toJson(model);
-        Log.i("RetroSync", "Saving initial pending object");
-        pendingObject.save();
+
         // - save to database
         model.save();
-        if (!saveToServer(model, service, pendingObject, verb)) {
+        if (!reachability.isOnline()) {
+            pendingObject.save();
+        } else if (!saveToServer(model, service, pendingObject, verb)) {
             service.failure(RetrofitError.networkError("", new IOException("No network connectivity")));
         }
     }
@@ -66,7 +66,7 @@ public class RetroSync {
             for (PendingObject object : pendingObjects) {
                 // - turn each pending object into their actual object
                 Class<?> modelClass = Class.forName(object.className);
-                SyncModel model = (SyncModel) new Gson().fromJson(object.json, modelClass);
+                SyncModel model = (SyncModel) getActiveAndroidGson().fromJson(object.json, modelClass);
 
                 Class<?> serviceClass = Class.forName(object.serviceName);
                 SyncInteractorInterface service = (SyncInteractorInterface) new Gson().fromJson(object.json, serviceClass);

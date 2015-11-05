@@ -9,7 +9,7 @@ import com.activeandroid.annotation.Column;
  * Created by bqmackay on 8/12/15.
  */
 public abstract class SyncModel extends Model {
-    @Expose @Column (name = "serverId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE) public long id;
+    @Expose @Column (name = "serverId", unique = true, onUniqueConflict = Column.ConflictAction.IGNORE) public long id;
 
     @Override
     public boolean equals(Object o) {

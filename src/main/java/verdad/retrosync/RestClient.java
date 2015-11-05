@@ -7,8 +7,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import android.content.Context;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public class RestClient {
     }
 
     // used on Application.OnCreate() to initialize the service
-    public void configureRestAdapter(final Context context, String baseServerPath, RequestInterceptor interceptor ) {
+    public void configureRestAdapter(String baseServerPath, RequestInterceptor interceptor) {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
